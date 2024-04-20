@@ -1,4 +1,4 @@
-package com.PaymentService.payments.paymentgateways;
+package com.PaymentService.payments.services.paymentgateways;
 
 import com.PaymentService.payments.models.PaymentStatus;
 
@@ -9,7 +9,7 @@ public class StripePaymentGateway implements PaymentGatewayStrategyPattern{
     }
 
     @Override
-    public PaymentStatus getPaymentStatus(Long paymentId) {
+    public PaymentStatus getPaymentStatus(String paymentId) {
         return null;
     }
 }

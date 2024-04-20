@@ -14,7 +14,7 @@ public class PaymentController {
     @Autowired
     PaymentService paymentService;
 
-    @PostMapping("/")
+    @PostMapping()
     public CreatePaymentLinkResponseDto createPaymentLink(@RequestBody CreatePaymentLinkRequestDto createPaymentLinkRequestDto){
         String redirectUrl = paymentService.createPaymentLink(createPaymentLinkRequestDto.getOrderId());
 
@@ -24,7 +24,7 @@ public class PaymentController {
     }
 
     @GetMapping("/{id}")
-    public PaymentStatus checkPaymentStatus(@PathVariable("id") Long paymentId){
+    public PaymentStatus checkPaymentStatus(@PathVariable("id") String paymentId){
         return paymentService.getPaymentStatus(paymentId);
     }
 

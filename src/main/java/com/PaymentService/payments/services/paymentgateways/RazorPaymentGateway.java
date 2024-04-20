@@ -1,6 +1,7 @@
-package com.PaymentService.payments.paymentgateways;
+package com.PaymentService.payments.services.paymentgateways;
 
 import com.PaymentService.payments.models.PaymentStatus;
+import com.razorpay.Payment;
 import com.razorpay.PaymentLink;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
@@ -25,7 +26,7 @@ public class RazorPaymentGateway implements PaymentGatewayStrategyPattern{
         paymentLinkRequest.put("accept_partial",false);
 //        paymentLinkRequest.put("first_min_partial_amount",100);
         paymentLinkRequest.put("expire_by",System.currentTimeMillis()/1000 + 30 * 60); // epoch timestamp
-        paymentLinkRequest.put("reference_id",orderId);
+        paymentLinkRequest.put("reference_id",orderId.toString());
 //        paymentLinkRequest.put("description","");
         JSONObject customer = new JSONObject();
         customer.put("name",userPhone);
@@ -51,11 +52,30 @@ public class RazorPaymentGateway implements PaymentGatewayStrategyPattern{
             System.out.println("Something went wrong");
         }
 
-        return payment.toString();
+        return payment.get("short_url");
     }
 
+
+
     @Override
-    public PaymentStatus getPaymentStatus(Long paymentId) {
-        return null;
+    public PaymentStatus getPaymentStatus(String paymentId) {
+        Payment payment = null;
+
+        try {
+            payment = razorpayClient.payments.fetch(paymentId);
+        } catch (RazorpayException razorpayException) {
+            System.out.println(razorpayException);
+            System.out.println("Something went wrong");
+        }
+
+        String paymentStatus = payment.get("Status");
+
+        if (paymentStatus.equals("captured")) {
+            return PaymentStatus.SUCCESS;
+        }
+        else{
+            return PaymentStatus.FAILURE;
+        }
+
     }
 }

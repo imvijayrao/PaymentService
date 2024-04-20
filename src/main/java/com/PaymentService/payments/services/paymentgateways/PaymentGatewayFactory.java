@@ -1,10 +1,7 @@
-package com.PaymentService.payments.paymentgateways;
+package com.PaymentService.payments.services.paymentgateways;
 
-import com.razorpay.RazorpayClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Random;
 
 @Service
 public class PaymentGatewayFactory {
