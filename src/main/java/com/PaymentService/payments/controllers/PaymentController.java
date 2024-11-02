@@ -16,7 +16,7 @@ public class PaymentController {
 
     @PostMapping()
     public CreatePaymentLinkResponseDto createPaymentLink(@RequestBody CreatePaymentLinkRequestDto createPaymentLinkRequestDto){
-        String redirectUrl = paymentService.createPaymentLink(createPaymentLinkRequestDto.getOrderId());
+        String redirectUrl = paymentService.createPaymentLink(createPaymentLinkRequestDto);
 
         CreatePaymentLinkResponseDto responseDto = new CreatePaymentLinkResponseDto();
         responseDto.setPaymentUrl(redirectUrl);

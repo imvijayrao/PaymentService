@@ -1,5 +1,6 @@
 package com.PaymentService.payments.services;
 
+import com.PaymentService.payments.dtos.CreatePaymentLinkRequestDto;
 import com.PaymentService.payments.models.Payment;
 import com.PaymentService.payments.models.PaymentGateway;
 import com.PaymentService.payments.models.PaymentStatus;
@@ -9,6 +10,10 @@ import com.PaymentService.payments.services.paymentgateways.RazorPaymentGateway;
 import com.PaymentService.payments.repository.PaymentRespository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Random;
+import java.util.random.RandomGenerator;
+import java.util.random.RandomGeneratorFactory;
 
 @Service
 public class PaymentService {
@@ -25,7 +30,7 @@ public class PaymentService {
         this.razorPaymentGateway = razorPaymentGateway;
     }
 
-    public String createPaymentLink(Long orderId){
+    public String createPaymentLink(CreatePaymentLinkRequestDto createPaymentLinkRequestDto){
 
         //Using order id we can able to get details of the user and order as well and calculate amount and give price details
 
@@ -36,14 +41,15 @@ public class PaymentService {
 
         PaymentGatewayStrategyPattern paymentGatewayStrategyPattern = paymentGatewayFactory.getPaymentGateway();
 
-        String paymentLink =  paymentGatewayStrategyPattern.createPaymentLink(amount, username, userEmail, userphone, orderId);
+        String paymentLink =  paymentGatewayStrategyPattern.createPaymentLink(amount, username, userEmail, userphone, createPaymentLinkRequestDto.getOrderId());
 
         Payment payment = new Payment();
         payment.setPaymentLink(paymentLink);
-        payment.setOrderId(orderId);
+        payment.setOrderId(createPaymentLinkRequestDto.getOrderId());
         payment.setAmount(amount);
-        payment.setPaymentGateway(PaymentGateway.RAZORPAY);
+        payment.setPaymentGateway(createPaymentLinkRequestDto.getPaymentGateway());
         payment.setPaymentStatus(PaymentStatus.PENDING);
+        payment.setPaymentGatewayReferenceId(createPaymentLinkRequestDto.getPaymentGatewayReferenceId());
 
         paymentRespository.save(payment);
 
